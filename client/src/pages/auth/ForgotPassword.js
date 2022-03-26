@@ -10,7 +10,7 @@ const ForgotPassword = () => {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
 
-  let navigate = useNavigate();
+  const navigate = useNavigate();
 
   const { user } = useSelector((state) => ({ ...state }));
 
@@ -29,7 +29,7 @@ const ForgotPassword = () => {
         url: process.env.REACT_APP_FORGOT_PASSWORD_REDIRECT,
         handleCodeInApp: true,
       };
-      const result = await sendPasswordResetEmail(auth, email, config);
+      await sendPasswordResetEmail(auth, email, config);
 
       setEmail("");
       setLoading(false);

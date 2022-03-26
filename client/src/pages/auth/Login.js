@@ -2,24 +2,34 @@ import React, { useState, useEffect } from "react";
 import { Container, Form, Button, Row } from "react-bootstrap";
 import { toast } from "react-toastify";
 
-import {
-  signInWithEmailAndPassword,
-  signInWithPopup,
-  GoogleAuthProvider,
-} from "firebase/auth";
+import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { useDispatch, useSelector } from "react-redux";
 
 import { auth, googleAuthProvider } from "../../firebase";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
+import axios from "axios";
+
+const createOrUpdateUser = async (authtoken) => {
+  return await axios.post(
+    `${process.env.REACT_APP_API}/create-or-update-user`,
+    {},
+    {
+      headers: {
+        authtoken,
+      },
+    }
+  );
+};
+
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  let dispatch = useDispatch();
-  let navigate = useNavigate();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const { user } = useSelector((state) => ({ ...state }));
 
@@ -39,15 +49,19 @@ const Login = () => {
       const { user } = result;
       const idTokenResult = await user.getIdTokenResult();
 
-      dispatch({
-        type: "LOGGED_IN_USER",
-        payload: {
-          email: user.email,
-          token: idTokenResult.token,
-        },
-      });
+      createOrUpdateUser(idTokenResult.token)
+        .then((res) => console.log("CREATE OR UPDATE RES", res))
+        .catch();
 
-      navigate("/", { replace: true });
+      // dispatch({
+      //   type: "LOGGED_IN_USER",
+      //   payload: {
+      //     email: user.email,
+      //     token: idTokenResult.token,
+      //   },
+      // });
+
+      // navigate("/", { replace: true });
     } catch (error) {
       console.log(error);
       toast.error(error.message);

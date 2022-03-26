@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Container, Form, Button, Row } from "react-bootstrap";
-import { getAuth, sendSignInLinkToEmail } from "firebase/auth";
+import { sendSignInLinkToEmail } from "firebase/auth";
 import { toast } from "react-toastify";
 
 import { auth } from "../../firebase";
@@ -11,7 +11,7 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
 
-  let navigate = useNavigate();
+  const navigate = useNavigate();
 
   const { user } = useSelector((state) => ({ ...state }));
 
@@ -53,8 +53,8 @@ const Register = () => {
         // clear state
         setEmail("");
       } catch (error) {
-        const errorCode = error.code;
-        const errorMessage = error.message;
+        // const errorCode = error.code;
+        // const errorMessage = error.message;
         console.log(error);
       }
     }
