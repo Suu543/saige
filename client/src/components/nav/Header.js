@@ -1,7 +1,7 @@
 import firebase from "firebase/compat/app";
 
 import { Navbar, Nav, NavDropdown, Container, Button } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { LinkContainer } from "react-router-bootstrap";
 
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -24,12 +24,12 @@ const Header = () => {
   return (
     <Navbar sticky="top" expand="lg">
       <Container fluid>
-        <Navbar.Brand id="navbarBrand" href="#">
-          <Link
-            className="d-flex align-items-center justify-content-center"
-            to="/"
-            style={{ textDecoration: "none" }}
-          >
+        <LinkContainer
+          className="d-flex align-items-center justify-content-center"
+          to="/"
+          style={{ textDecoration: "none" }}
+        >
+          <Navbar.Brand id="navbarBrand" href="#">
             <img
               src="/logo.png"
               width="55"
@@ -38,8 +38,8 @@ const Header = () => {
               alt="React Bootstrap logo"
             />
             <span style={{ fontSize: "25px" }}>Saige</span>
-          </Link>
-        </Navbar.Brand>
+          </Navbar.Brand>
+        </LinkContainer>
         <Navbar.Toggle aria-controls="navbarScroll" />
         <Navbar.Collapse id="navbarScroll">
           <Nav
@@ -71,22 +71,20 @@ const Header = () => {
           <Nav className="align-items-center">
             {!user && (
               <>
-                <Nav.Link>
-                  <Link to="/login">로그인</Link>
-                </Nav.Link>
-                <Nav.Link>
-                  <Link to="/register">회원가입</Link>
-                </Nav.Link>
+                <LinkContainer to="/login">
+                  <Nav.Link>로그인</Nav.Link>
+                </LinkContainer>
+                <LinkContainer to="/register">
+                  <Nav.Link>회원가입</Nav.Link>
+                </LinkContainer>
               </>
             )}
 
             {user && (
               <>
-                <Nav.Link>
-                  <Link to="/user">
-                    {user.email && user.email.split("@")[0]}
-                  </Link>
-                </Nav.Link>
+                <LinkContainer to="/user">
+                  <Nav.Link>{user.email && user.email.split("@")[0]}</Nav.Link>
+                </LinkContainer>
                 <Nav.Link>
                   <Button onClick={logout}>로그아웃</Button>
                 </Nav.Link>

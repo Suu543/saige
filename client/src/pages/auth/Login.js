@@ -9,19 +9,7 @@ import { auth, googleAuthProvider } from "../../firebase";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
-import axios from "axios";
-
-const createOrUpdateUser = async (authtoken) => {
-  return await axios.post(
-    `${process.env.REACT_APP_API}/create-or-update-user`,
-    {},
-    {
-      headers: {
-        authtoken,
-      },
-    }
-  );
-};
+import { createOrUpdateUser } from "../../functions/auth";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -31,13 +19,21 @@ const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const roleBasedRedirect = (res) => {
+    if (res.data.role === "admin") {
+      navigate("/admin/dashboard", { replace: true });
+    } else {
+      navigate("/user/history", { replace: true });
+    }
+  };
+
   const { user } = useSelector((state) => ({ ...state }));
 
   useEffect(() => {
     if (user && user.token) {
       navigate("/", { replace: true });
     }
-  }, [user]);
+  }, [user, navigate]);
 
   const handleSubmit = async (e) => {
     setLoading(true);
@@ -49,19 +45,21 @@ const Login = () => {
       const { user } = result;
       const idTokenResult = await user.getIdTokenResult();
 
-      createOrUpdateUser(idTokenResult.token)
-        .then((res) => console.log("CREATE OR UPDATE RES", res))
-        .catch();
+      const loggedUser = await createOrUpdateUser(idTokenResult.token);
+      console.log("getUser", loggedUser);
 
-      // dispatch({
-      //   type: "LOGGED_IN_USER",
-      //   payload: {
-      //     email: user.email,
-      //     token: idTokenResult.token,
-      //   },
-      // });
+      dispatch({
+        type: "LOGGED_IN_USER",
+        payload: {
+          name: loggedUser.data.name,
+          email: loggedUser.data.email,
+          token: idTokenResult.token,
+          role: loggedUser.data.role,
+          _id: loggedUser.data._id,
+        },
+      });
 
-      // navigate("/", { replace: true });
+      roleBasedRedirect(loggedUser);
     } catch (error) {
       console.log(error);
       toast.error(error.message);
@@ -75,11 +73,17 @@ const Login = () => {
       const { user } = result;
       const idTokenResult = await user.getIdTokenResult();
 
+      const loggedUser = await createOrUpdateUser(idTokenResult.token);
+      console.log("getUser", loggedUser);
+
       dispatch({
         type: "LOGGED_IN_USER",
         payload: {
-          email: user.email,
+          name: loggedUser.data.name,
+          email: loggedUser.data.email,
           token: idTokenResult.token,
+          role: loggedUser.data.role,
+          _id: loggedUser.data._id,
         },
       });
 

@@ -19,7 +19,7 @@ const Register = () => {
     if (user && user.token) {
       navigate("/", { replace: true });
     }
-  }, [user]);
+  }, [user, navigate]);
 
   const handleValidation = (e) => {
     let formIsValid = true;

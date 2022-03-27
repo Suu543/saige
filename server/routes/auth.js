@@ -2,22 +2,13 @@ const express = require("express");
 const router = express.Router();
 
 // middlewares
-const { authCheck } = require("../middlewares/auth");
+const { authCheck, adminCheck } = require("../middlewares/auth");
 
 // import
-const { createOrUpdateUser } = require("../controllers/auth");
+const { createOrUpdateUser, currentUser } = require("../controllers/auth");
 
 router.post("/create-or-update-user", authCheck, createOrUpdateUser);
-
-// const myMiddleware = (req, res, next) => {
-//   console.log("I'm a middleware YaY!!");
-//   next();
-// };
-
-// router.get("/testing", myMiddleware, (req, res, next) => {
-//   res.json({
-//     data: "You successfully tried middleware",
-//   });
-// });
+router.post("/current-user", authCheck, currentUser);
+router.post("/current-admin", authCheck, adminCheck, currentUser);
 
 module.exports = router;

@@ -1,22 +1,25 @@
 import React, { useState, useEffect } from "react";
 import { Container, Form, Button, Row } from "react-bootstrap";
 import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
-import {
-  isSignInWithEmailLink,
-  signInWithEmailLink,
-  updatePassword,
-} from "firebase/auth";
+import { signInWithEmailLink, updatePassword } from "firebase/auth";
 
 import { auth } from "../../firebase";
+
+import { createOrUpdateUser } from "../../functions/auth";
 
 const RegisterComplete = ({ history }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const dispatch = useDispatch();
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     setEmail(window.localStorage.getItem("emailForSignIn"));
-  }, []);
+  }, [navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -46,6 +49,20 @@ const RegisterComplete = ({ history }) => {
         const idTokenResult = await user.getIdTokenResult();
         // 3. Redux Store
         console.log("user", user, "idTokenResult", idTokenResult);
+
+        const loggedUser = await createOrUpdateUser(idTokenResult.token);
+        console.log("getUser", loggedUser);
+
+        dispatch({
+          type: "LOGGED_IN_USER",
+          payload: {
+            name: loggedUser.data.name,
+            email: loggedUser.data.email,
+            token: idTokenResult.token,
+            role: loggedUser.data.role,
+            _id: loggedUser.data._id,
+          },
+        });
         // 4. Redirect
         // history.push("/");
       }
