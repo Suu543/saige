@@ -29,3 +29,18 @@ there are few more things to do
    1. Verify that is is a valid token
    2. Access user info from firebase using that token
 5. Let's do these things... so that we can finally save user in database, we will firebase-admin tool to get this doone.
+
+## Part-3
+Before admin can create products, there must be categories and subcategories to choose from
+Because each product will belong to a category and subcategories that belongs to that category
+So let's start with our backend
+First we start with category
+We create category model, then add some routes and create controller methods to handle those routes
+
+## Part-4
+So far we have been able to CRUD categories
+Let's refactor our code a bit
+Let's try to create re-usable form for both create and update
+Then let's also add search/filtering option so that you can type the category name and find it easily from the long list of categories
+Then we will move on to subcategories
+Afterwards we can start creating products

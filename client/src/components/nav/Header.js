@@ -80,11 +80,24 @@ const Header = () => {
               </>
             )}
 
-            {user && (
+            {user && user.role === "customer" && (
               <>
-                <LinkContainer to="/user">
+                <LinkContainer to="/user/history">
                   <Nav.Link>{user.email && user.email.split("@")[0]}</Nav.Link>
                 </LinkContainer>
+                <Nav.Link>
+                  <Button onClick={logout}>로그아웃</Button>
+                </Nav.Link>
+              </>
+            )}
+
+            {user && user.role === "admin" && (
+              <>
+                <NavDropdown title={user.email && user.email.split("@")[0]}>
+                  <LinkContainer to="/admin/dashboard">
+                    <NavDropdown.Item>Admin Dashboard</NavDropdown.Item>
+                  </LinkContainer>
+                </NavDropdown>
                 <Nav.Link>
                   <Button onClick={logout}>로그아웃</Button>
                 </Nav.Link>

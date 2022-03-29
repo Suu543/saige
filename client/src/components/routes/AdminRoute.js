@@ -4,6 +4,8 @@ import { useSelector } from "react-redux";
 import LoadingToRedirect from "./LoadingToRedirect";
 import { currentAdmin } from "../../functions/auth";
 import AdminDashboard from "../../pages/admin/AdminDashboard";
+import CategoryCreate from "../../pages/admin/category/CategoryCreate";
+import CategoryUpdate from "../../pages/admin/category/CategoryUpdate";
 
 const AdminRoute = ({ children, ...rest }) => {
   const { user } = useSelector((state) => ({ ...state }));
@@ -29,6 +31,8 @@ const AdminRoute = ({ children, ...rest }) => {
   return ok ? (
     <Routes>
       <Route path="dashboard" element={<AdminDashboard />} />
+      <Route path="category" element={<CategoryCreate />} />
+      <Route path="category/:slug" element={<CategoryUpdate />} />
     </Routes>
   ) : (
     <LoadingToRedirect />
